@@ -13,11 +13,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const db_1 = require("./db/db");
 const app = express_1.default();
 const port = 4000;
 // Body parsing Middleware
+app.use(cors_1.default());
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+require('./routes/restaurantRoutes')(app, db_1.pool);
 app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.status(200).send({
         message: 'Hello World!',
